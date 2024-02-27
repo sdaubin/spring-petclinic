@@ -22,6 +22,7 @@ import java.net.URLConnection;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,9 +166,17 @@ class OwnerController {
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
 		try {
 			HttpClient client = HttpClient.newHttpClient();
-			HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://google.com")).GET().build();
+			List<String> uris = new ArrayList<>();
+			uris.addAll(List.of("https://www.yahoo.com", "https://google.com"));
+			if (System.currentTimeMillis() % 6 == 0) {
+				uris.add("https://fatherjohnmisty.com");
+			}
 
-			client.send(request, HttpResponse.BodyHandlers.discarding());
+			for (String uri : uris) {
+				HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).GET().build();
+
+				client.send(request, HttpResponse.BodyHandlers.discarding());
+			}
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
