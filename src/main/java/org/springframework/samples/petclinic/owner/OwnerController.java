@@ -164,23 +164,26 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
-		try {
-			HttpClient client = HttpClient.newHttpClient();
-			List<String> uris = new ArrayList<>();
-			uris.addAll(List.of("https://www.yahoo.com", "https://google.com"));
-			if (System.currentTimeMillis() % 6 == 0) {
-				uris.add("https://fatherjohnmisty.com");
+		if (System.currentTimeMillis() % 3 == 0) {
+			try {
+				HttpClient client = HttpClient.newHttpClient();
+				List<String> uris = new ArrayList<>();
+				uris.addAll(List.of("https://www.yahoo.com", "https://google.com"));
+				if (System.currentTimeMillis() % 666 == 0) {
+					uris.add("https://fatherjohnmisty.com");
+				}
+
+				for (String uri : uris) {
+					HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).GET().build();
+
+					client.send(request, HttpResponse.BodyHandlers.discarding());
+				}
 			}
-
-			for (String uri : uris) {
-				HttpRequest request = HttpRequest.newBuilder().uri(URI.create(uri)).GET().build();
-
-				client.send(request, HttpResponse.BodyHandlers.discarding());
+			catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
-		catch (Exception ex) {
-			ex.printStackTrace();
-		}
+
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
 		mav.addObject(owner);
