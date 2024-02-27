@@ -15,6 +15,13 @@
  */
 package org.springframework.samples.petclinic.owner;
 
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,6 +163,17 @@ class OwnerController {
 	 */
 	@GetMapping("/owners/{ownerId}")
 	public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
+		try {
+			HttpClient client = HttpClient.newHttpClient();
+			HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://google.com")).GET().build();
+
+			HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
+
+			System.out.println(response.statusCode());
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+		}
 		ModelAndView mav = new ModelAndView("owners/ownerDetails");
 		Owner owner = this.owners.findById(ownerId);
 		mav.addObject(owner);
