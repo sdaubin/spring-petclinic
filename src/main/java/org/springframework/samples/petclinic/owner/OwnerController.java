@@ -167,9 +167,7 @@ class OwnerController {
 			HttpClient client = HttpClient.newHttpClient();
 			HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://google.com")).GET().build();
 
-			HttpResponse<Void> response = client.send(request, HttpResponse.BodyHandlers.discarding());
-
-			System.out.println(response.statusCode());
+			client.send(request, HttpResponse.BodyHandlers.discarding());
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
